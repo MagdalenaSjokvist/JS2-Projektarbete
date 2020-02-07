@@ -21,7 +21,7 @@ $(document).ready(function() {
 			console.log(element.name)
 		})
 
-		// Visa alla e-postadresser
+		// Visa alla origin
 		products.forEach(element => {
 			console.log(element.origin)
 		})
@@ -36,18 +36,22 @@ $(document).ready(function() {
 		let table = '<table class="table table-striped table-hover">'
 		table += `<thead class="thead-dark">
                 <tr>
-                  <th>Namn</th>
+									<th></th>
+									<th>Namn</th>
                   <th>Ursprungsland</th>
                   <th>Pris</th>
+                  <th></th>
                 </tr
               </thead>
     `
 
 		products.forEach(product => {
 			table += `<tr>
-                  <td>${product.name}</td>
+									<td><div class="img-container"><img src="${product.image}"</div></td>						
+									<td>${product.name}</td>
                   <td>${product.origin}</td>
-                  <td>${product.price}</td>
+									<td>${product.price}</td>
+									<td><button type="button" id="addProductBtn">Lägg i varukorg</button>
                 </tr>
       `
 		})

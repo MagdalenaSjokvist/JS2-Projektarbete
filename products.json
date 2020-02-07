@@ -1,12 +1,62 @@
 [
-	{ "name": "Svartpeppar", "origin": "Indien", "price": 20 },
-	{ "name": "Havssalt", "origin": "England", "price": 10 },
-	{ "name": "Rosmarin", "origin": "Kroatien", "price": 15 },
-	{ "name": "Basilika", "origin": "Egypten", "price": 20 },
-	{ "name": "Saffran", "origin": "Iran", "price": 70 },
-	{ "name": "Oregano", "origin": "Chile", "price": 15 },
-	{ "name": "Kanel", "origin": "Indonesien", "price": 25 },
-	{ "name": "Koriander", "origin": "Marocko", "price": 30 },
-	{ "name": "Timjan", "origin": "Spanien", "price": 15 },
-	{ "name": "Dragon ", "origin": "Frankrike", "price": 25 }
+	{
+		"name": "Svartpeppar",
+		"origin": "Indien",
+		"price": 20,
+		"image": "/images/svartpeppar.png"
+	},
+	{
+		"name": "Havssalt",
+		"origin": "England",
+		"price": 10,
+		"image": "/images/dragon.png"
+	},
+	{
+		"name": "Rosmarin",
+		"origin": "Kroatien",
+		"price": 15,
+		"image": "/images/rosmarin.png"
+	},
+	{
+		"name": "Basilika",
+		"origin": "Egypten",
+		"price": 20,
+		"image": "/images/svartpeppar.png"
+	},
+	{
+		"name": "Saffran",
+		"origin": "Iran",
+		"price": 70,
+		"image": "/images/saffran.png"
+	},
+	{
+		"name": "Oregano",
+		"origin": "Chile",
+		"price": 15,
+		"image": "/images/oregano.png"
+	},
+	{
+		"name": "Kanel",
+		"origin": "Indonesien",
+		"price": 25,
+		"image": "/images/kanel.png"
+	},
+	{
+		"name": "Koriander",
+		"origin": "Marocko",
+		"price": 30,
+		"image": "/images/koriander.png"
+	},
+	{
+		"name": "Timjan",
+		"origin": "Spanien",
+		"price": 15,
+		"image": "/images/timjan.png"
+	},
+	{
+		"name": "Dragon ",
+		"origin": "Frankrike",
+		"price": 25,
+		"image": "/images/dragon.png"
+	}
 ]

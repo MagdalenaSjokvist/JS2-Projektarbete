@@ -1,1 +1,15 @@
 /* Importera bootstrap här? */
+
+* {
+	box-sizing: border-box;
+	margin: 0 auto;
+}
+
+.img-container {
+	height: 70px;
+}
+
+img {
+	max-height: 100%;
+	max-width: 100%;
+}
