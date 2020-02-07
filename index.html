@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+			integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+			crossorigin="anonymous"
+		/>
+	</head>
+	<body>
+		<header>
+			<h1>Din krydda i tillvaron</h1>
+		</header>
+		<main>
+			<section id="store">
+				<h2>Kryddor</h2>
+
+				<div id="products"></div>
+				<!--här ska produkterna visas, inom div-taggen nedan -->
+				<!--allt ska hämtas från json-filen och ersätter div-taggens innerHTML -->
+
+				<!--- Allt inom article-taggen nedan ska in för varje produkt i div-taggen ovan. Ska läggas in som innerHTML, 
+					men byt ut de specifika kryddnamnen, pris, ursprungsland osv mot variabler som finns inom forEach,
+					och som genereras allt eftersom arrayen från json-filen loopas igenom.
+
+				<article class="product">
+          <p id="demo"></p>
+					<h3>Krydda1</h3>
+					<div><img src="#" alt="krydda1" /></div>
+					<p>Pris: 0 kr</p>
+					<p>Ursprungsland:</p>
+					<input type="number" name="quantity" min="0" />
+					<button type="button" class="addProductBtn"">Lägg i varukorg</button>
+				</article>
+			-->
+			</section>
+		</main>
+		<footer>
+			<hr />
+			<p>Copyright &copy SpiceFends2020</p>
+		</footer>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+		<script src="get-products.js"></script>
+	</body>
+</html>
