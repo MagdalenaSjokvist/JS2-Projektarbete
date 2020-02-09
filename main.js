@@ -108,7 +108,9 @@ $(document).ready(function() {
 			cartItems +=
 				"<button type='button' class='emptyCartBtn'><i class='fa fa-trash'></i> Töm varukorgen</button></br></br>"
 			//	cartArray = []
-			//	console.log(cartItems)
+			console.log(cartItems)
+			console.log(cartArray)
+
 			//cartItems += "</table>";
 
 			console.log(cartItems)
@@ -143,9 +145,10 @@ $(document).ready(function() {
 			})
 
 			function emptyCart() {
-				cartArray = []
-				drawCart()
-				//alert("Varukorgen är tömd")
+				if (confirm("Vill du tömma din varukorg?")) {
+					cartArray = []
+					drawCart()
+				}
 			}
 
 			//18. Funktion för beställningsbekräftelse
