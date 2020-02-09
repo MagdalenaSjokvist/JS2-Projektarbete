@@ -1,72 +1,82 @@
 [
 	{
-		"name": "Svartpeppar",
-		"origin": "Indien",
-		"price": 20,
-		"image": "/images/svartpeppar.png",
-		"id": 1
-	},
-	{
-		"name": "Havssalt",
-		"origin": "England",
-		"price": 10,
-		"image": "/images/dragon.png",
-		"id": 2
-	},
-	{
-		"name": "Rosmarin",
-		"origin": "Kroatien",
-		"price": 15,
-		"image": "/images/rosmarin.png",
-		"id": 3
-	},
-	{
 		"name": "Basilika",
+		"image": "images/basilika.png",
 		"origin": "Egypten",
 		"price": 20,
-		"image": "/images/svartpeppar.png",
-		"id": 4
-	},
-	{
-		"name": "Saffran",
-		"origin": "Iran",
-		"price": 70,
-		"image": "/images/saffran.png",
-		"id": 5
-	},
-	{
-		"name": "Oregano",
-		"origin": "Chile",
-		"price": 15,
-		"image": "/images/oregano.png",
-		"id": 6
-	},
-	{
-		"name": "Kanel",
-		"origin": "Indonesien",
-		"price": 25,
-		"image": "/images/kanel.png",
-		"id": 7
-	},
-	{
-		"name": "Koriander",
-		"origin": "Marocko",
-		"price": 30,
-		"image": "/images/koriander.png",
-		"id": 8
-	},
-	{
-		"name": "Timjan",
-		"origin": "Spanien",
-		"price": 15,
-		"image": "/images/timjan.png",
-		"id": 9
+		"id": 1,
+		"qty": 0
 	},
 	{
 		"name": "Dragon ",
+		"image": "images/dragon.png",
 		"origin": "Frankrike",
 		"price": 25,
-		"image": "/images/dragon.png",
-		"id": 10
+		"id": 2,
+		"qty": 0
+	},
+	{
+		"name": "Ingefära",
+		"image": "images/ingefara.png",
+		"origin": "Nigeria",
+		"price": 10,
+		"id": 3,
+		"qty": 0
+	},
+	{
+		"name": "Kanel",
+		"image": "images/kanel.png",
+		"origin": "Indonesien",
+		"price": 25,
+		"id": 4,
+		"qty": 0
+	},
+	{
+		"name": "Koriander",
+		"image": "images/koriander.png",
+		"origin": "Marocko",
+		"price": 30,
+		"id": 5,
+		"qty": 0
+	},
+	{
+		"name": "Oregano",
+		"image": "images/oregano.png",
+		"origin": "Chile",
+		"price": 15,
+		"id": 6,
+		"qty": 0
+	},
+	{
+		"name": "Rosmarin",
+		"image": "images/rosmarin.png",
+		"origin": "Kroatien",
+		"price": 15,
+		"id": 7,
+		"qty": 0
+	},
+	{
+		"name": "Saffran",
+		"image": "images/saffran.png",
+		"origin": "Iran",
+		"price": 70,
+		"id": 8,
+		"qty": 0
+	},
+	{
+		"name": "Svartpeppar",
+		"image": "images/svartpeppar.png",
+		"origin": "Indien",
+		"price": 20,
+		"id": 9,
+		"qty": 0
+	},
+	{
+		"name": "Timjan",
+		"image": "images/timjan.png",
+		"origin": "Spanien",
+		"price": 15,
+		"id": 10,
+		"qty": 0
 	}
 ]

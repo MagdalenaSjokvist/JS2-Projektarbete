@@ -20,6 +20,12 @@ td {
 	margin: 10px;
 }
 
+.emptyCartBtn,
+.sendOrderBtn {
+	margin-right: 10px;
+	margin-top: 10px;
+}
+
 .img-container {
 	height: 70px;
 }

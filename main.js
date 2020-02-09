@@ -1,151 +1,167 @@
-//getJSON
 $(document).ready(function() {
+	//initiera variabler, ska vi göra detta eller inte? Vad tycker du?
+	//let allProducts = ""; //Produkttabellen inkl html-taggar
+	//let cartItems = ""; //Varukorgstabellen inkl html-taggar
+	//let products = []; JSON-arrayen m objekt
+	let cartArray = [] //Array m varukorgens innehåll (produkter) i form av objekt
+
+	//getJSON
 	$.getJSON("products.json", function(products) {
-		/*console.log(products) //Skriver ut resultatet (response) = hela arrayen av produkter
-		console.log(products[0]) //Skriver ut hela det första objektet (med alla properties)
-		console.log(products[0].name) //Skriver ut name från första objektet
-	
-		//Visar alla namn
-		products.forEach(element => {
-			console.log(element.name)
-		})
-
-		//Visar både namn och origin:
-		products.forEach(product => {
-			console.log(product.name + ", " + product.origin)
-		})
-		*/
-
 		//STORE
-
-		// 1. Skapa en variabel, och sätt den till en sträng med alla relevanta element
-		// Strängen ska innehålla en tabell i detta fall
+		// 1. Skapa en variabel, och sätt den till en sträng som innehåller all info / alla relevanta element
+		// Strängen ska innehålla en tabell i detta fall (om det är så vi vill att datan ska visas)
 		let allProducts = '<table class="table table-striped table-hover">'
 		allProducts += `<thead class="thead-dark">
-                <tr>
-									<th></th>
-									<th>Namn</th>
-                  <th>Ursprungsland</th>
-                  <th>Pris</th>
-                  <th>Antal</th>
-                  <th></th>
-                </tr
-              </thead>`
+                  <tr>
+                    <th></th>
+                    <th>Namn</th>
+                    <th>Ursprungsland</th>
+                    <th>Pris/st</th>
+                    <th>Antal</th>
+                    <th></th>
+                  </tr
+                </thead>
+      `
 
 		//2. Lägg till en tabellrad för varje produkt med all aktuell data(i form av td-taggar) = produktens olika properties plus en td med <input>(antal), och en td med <button>(för att lägga till)
 		products.forEach(product => {
 			allProducts += `<tr>
-									<td><div class="img-container"><img src="${product.image}"</div></td>						
-									<td>${product.name}</td>
-                  <td>${product.origin}</td>
-									<td>${product.price}</td>
-									<td><input type="number" min=0 id="quantity"></input>
-									<td><button type="button" id="${product.id}" class="addProductBtn">Lägg i varukorg</button>
-                </tr>`
+                          <td><div class="img-container"><img src="${product.image}"</div></td>						
+                          <td>${product.name}</td>
+                          <td>${product.origin}</td>
+                          <td>${product.price} SEK</td>
+                          <td><input type="number" min=0 id="${product.id}" class="quantity"></input></td>
+                          <td><button type="button" id="${product.id}" class="addProductBtn">Lägg i varukorg</button></td>
+                      </tr>`
 		})
 
 		//3. Lägg till sluttaggen som sista steg, för att stänga table-elementet
 		allProducts += "</table>"
 
 		//4. Sätt innerHTML på div:en med id="products" till variabeln allProducts (ersätter den tomma div-taggen med tabellen som fyllts med alla produkter)
-		$("#products").html(allProducts) // Alternativ med vanilla JS: document.getElementById("products").innerHTML = allProducts
+		$("#products").html(allProducts)
 
+		//EVENT LISTENERS
 		//5. Hitta alla "Lägg till-knappar" (blir en sk. HTMLcollection med alla 10 knappar)
+		//Lyssna efter klick på alla "lägg till"-knappar, och anropa addToCart
+
 		const addProductButtons = document.getElementsByClassName("addProductBtn")
-		console.log(addProductButtons)
+		//console.log(addProductButtons);
 
-		//SHOPPING CART
-		//6. Skapa en tom array för varukorgen, som kan fyllas med de produkter som läggs till vid klick.
-		let cartArray = []
-
-		//7. Lyssna efter klick på alla knappar, och lägg till vald produkt i varukorgen (arrayen cartArray) och i localStorage
 		for (let i = 0; i < addProductButtons.length; i++) {
 			addProductButtons[i].addEventListener("click", function() {
 				addToCart(addProductButtons[i].id)
-				//console.log(addProductButtons[i].id)
 			})
 		}
+		//6. Hitta alla antal-input och skapa lyssnare för dem, anropa addQty som lägger till värdet i objektet
+		const itemQuantityFields = document.getElementsByClassName("quantity")
+		console.log(itemQuantityFields)
 
-		//8. Skapa grunden för en tabell för att visa produkter i varukorgen
-		//Fundering: Vad kan läggas i HTML och vad gör vi bäst i att skapa i js-filen? De delar som är konstanta.
-		let cartItems = `<table class="table table-striped table-hover">
-								<thead class="thead-light">
-									<tr>
-										<th>Namn</th>
-										<th>Antal</th>
-										<th>Pris</th>
-										<th></th>
-									</tr
-								</thead>`
+		for (let i = 0; i < itemQuantityFields.length; i++) {
+			itemQuantityFields[i].addEventListener("change", function() {
+				addQty(itemQuantityFields[i].id, itemQuantityFields[i].value)
+			})
+		}
+		//7. skapa lyssnare för + och - knappar som anropar changeQty
+		const updateButtons = document.getElementsByClassName("plusOne", "minusOne")
+		console.log(updateButtons)
 
-		drawCart()
+		//8. Hitta alla "Ta bort"-knappar och skapa lyssnare för dem, anropa removeFromCart
 
-		//9. Loopa igenom arrayen cartItems och skapa en ny tabellrad för varje produkt (med namn, antal, pris och ta bort-knapp)
+		//9. skapa lyssnare för beställningsknapp som anropar sendOrder()
+
+		//SHOPPING CART
+		//10. Skapa en tom array för varukorgen, som kan fyllas med de produkter som läggs till vid klick.
+		//	let cartArray = [] //Denna deklareras nu längst upp i filen.
+		//12. Funktion som skapar en tabellrad för varje produkt med namn, antal, pris och "ta bort"-knapp
 		function drawCart() {
+			//11. Skapa grunden för en tabell för att visa produkter i varukorgen (h2-rubrik + tabellhuvud med rubriker)
+			let cartItems = `<h2>Din varukorg</h2><table class="table table-striped table-hover">
+                        <thead class="thead-light">
+                          <tr>
+                            <th>Namn</th>
+                            <th>Antal</th>
+                            <th>Pris/st</th>
+                            <th></th>
+                          </tr>
+                        </thead>`
+			//Skapa ny tabellrad för varje produkt som läggs till (dvs. sparas i cartArray)
 			cartArray.forEach(product => {
-				cartItems += `<tr>
-											<td>${product.name}</td>
-											<td>Antal</td>
-											<td>${product.price}</td>
-											<td><button type="button" id="${product.id}" class="removeProductBtn">Ta bort</button></td>
-										</tr>`
+				cartItems += `<tr>						
+                          <td>${product.name}</td>
+                          <td><button type="button" id="${product.id}" class="plusOne">➕</button>  
+                          ${product.qty}  
+                          <button type="button" id="${product.id}" class="minusOne">➖</button></td>
+                          <td>${product.price} SEK</td>
+                          <td><button type="button" id="${product.id}" class="removeProductBtn">Ta bort</button></td>
+                        </tr>
+              `
 			})
-
 			cartItems += "</table>"
-			//Lägg till sluttaggen som sista steg, för att stänga table-elementet
+			cartItems +=
+				"<button type='button' class='sendOrderBtn'><i class='fa fa-arrow-right'></i> Skicka beställning</button></br>"
+			cartItems +=
+				"<button type='button' class='emptyCartBtn'><i class='fa fa-trash'></i> Töm varukorgen</button></br></br>"
+			//	cartArray = []
 
-			//10. Sätt div-taggen med id="cartItems" till tabellens innehåll = variabeln cartItems
-			$("#cartItems").html(cartItems)
+			console.log(cartItems)
+			//13. Lägg till tabellen med valda produkter i DOM:en
+			document.getElementById("cartItems").innerHTML = cartItems
 		}
 
-		//FUNDERING: Räcker det att spara till localstorage, och sedan hämta datan till varukorgen därifrån? I vilken ordning ska saker ske?
+		//Räcker det att spara till localstorage, och sedan hämta datan till varukorgen därifrån? I vilken ordning ska saker ske?
 
-		//FUNKTIONER
-
-		//11. Lägg till produkt i varukorgen (och local storarage?)
+		//14. Lägg till objekt i varukorgen samt spara det i localstorage
 		function addToCart(buttonId) {
 			for (let i = 0; i < products.length; i++) {
 				if (buttonId == products[i].id) {
+					//Kontrollera om produkten finns i varukorgen,
+					//om inte lägg till objektet i cartArray (EJ KLART)
 					cartArray.push(products[i])
-					//TEST: console.log("hej " + products[i].name)
-					//console.log(cartArray)
+					//console.log(products[i]);
+					console.log(cartArray)
 					drawCart()
+					//töm objektets qty-fält
 				}
-				//Lägg till produkt i localStorage
+				//Lägg till objektet i local storage
 			}
 		}
-		/*
-		//12. Ta bort produkt från varukorgen
+
+		//15. Ta bort objekt från varukorgen samt local storage
 		function removeFromCart(buttonId) {
+			//kod
+		}
+
+		//16. Rensa hela varukorgen samt hela local storage
+		const emptyCartBtn = document.getElementsByClassName("emptyCartBtn")
+		emptyCartBtn.addEventListener("click", emptyCart())
+
+		function emptyCart() {
+			cartArray = []
+		}
+
+		//17. Funktioner för att ändra antal på produkt
+		function addQty(id, qty) {
 			for (let i = 0; i < products.length; i++) {
-				if (buttonId == products[i].id) {
-					//TEST: console.log("hej " + products[i].name)
-					//cartArray.remove(products[i])
-					//TEST: console.log(cartArray)
+				if (id == products[i].id) {
+					products[i].qty = qty
 				}
-				drawCart()
 			}
+		}
+		function changeQty(buttonId) {
+			//kod
+		}
+
+		//18. Funktion för beställningsbekräftelse
+		function sendOrder() {
+			//alert eller för VG skapa i nytt fönster
 		}
 
 		function updateLocalStorage() {}
 		function getProductsFromLocalStorage() {}
-*/
 
 		//Funktion för att visa felmeddelande om JSON-filen inte går att läsa.
 	}).fail(function() {
 		console.error("Fel vid läsning av JSON!")
 	})
 })
-
-//1. Skapa produkt-behållare(article) för
-
-//Skapa en webbsida som visar ca 10 olika valfria produkter. Produkterna måste hämtas från en JSON-fil.
-
-//3. Skapa en JSON - fil för att lagra produkterna. Skapa en länk till JSON-filen längst ner på sidan.
-
-//4. Skapa en varukorg. För G-nivå skall man kunna lägga till en styck av varje produkt i varukorgen.
-
-//5. Visa produktnamn och pris i varukorgen. Visa totalsumma i varukorgen.
-
-//6. Lägg till en beställningsknapp i varukorgen.
-//Vid beställning(när kunden klickar på beställningsknappen), visa en bekräftelse på skärmen och töm varukorgen.
