@@ -94,9 +94,9 @@ $(document).ready(function() {
 			cartArray.forEach(product => {
 				cartItems += `<tr>						
                           <td>${product.name}</td>
-                          <td><button type="button" id="${product.id}" class="plusOne changeQty">➕</button>  
+                          <td><button type="button" id="${product.id}" class="minusOne changeQty">➖</button>  
                           ${product.qty}  
-                          <button type="button" id="${product.id}" class="minusOne changeQty">➖</button></td>
+                          <button type="button" id="${product.id}" class="plusOne changeQty">➕</button></td>
                           <td>${product.price} SEK</td>
                           <td><button type="button" id="${product.id}" class="removeProductBtn">Ta bort</button></td>
                         </tr>
@@ -104,16 +104,12 @@ $(document).ready(function() {
 			})
 			cartItems += "</table>"
 			cartItems +=
-				"<button type='button' class='sendOrderBtn'><i class='fa fa-arrow-right'></i> Skicka beställning</button>"
+				"<button type='button' class='sendOrderBtn'><i class='fa fa-arrow-right'></i><a href='receipt.html'> Skicka beställning </a></button>"
 			cartItems +=
-				"<button type='button' class='emptyCartBtn'><i class='fa fa-trash'></i> Töm varukorgen</button></br></br>"
+				"<button type='button' class='emptyCartBtn' ><i class='fa fa-trash'></i> Töm varukorgen</button></br></br>"
 			//	cartArray = []
 			console.log(cartItems)
-			console.log(cartArray)
 
-			//cartItems += "</table>";
-
-			console.log(cartItems)
 			//13. Lägg till tabellen i DOM:en
 			document.getElementById("cartItems").innerHTML = cartItems
 
@@ -136,22 +132,20 @@ $(document).ready(function() {
 			//16. Rensa hela varukorgen samt hela local storage
 
 			//Hitta "Töm varukorgen"-knappen och spara i en variabel (casha)
-			$emptyCartBtn = $(".emptyCartBtn")
-			console.log($emptyCartBtn)
+			$emptyCartBtn = $(".emptyCartBtn") //console.log($emptyCartBtn)
 
 			//Lyssna efter klick på töm-knappen
 			$emptyCartBtn.on("click", function() {
 				emptyCart()
 			})
 
+			//Funktionen emptyCart()
 			function emptyCart() {
-				if (confirm("Vill du tömma din varukorg?")) {
-					cartArray = []
-					drawCart()
-				}
+				cartArray = []
+				drawCart()
 			}
 
-			//18. Funktion för beställningsbekräftelse
+			//18. Funktion för beställningsbekräftelse kopplat till skicka-knapp
 
 			//Hitta "Skicka beställning"-knappen och spara i en variabel (casha)
 			$sendOrderBtn = $(".sendOrderBtn")
@@ -162,8 +156,16 @@ $(document).ready(function() {
 				sendOrder() //alert eller för VG skapa i nytt fönster
 			})
 
+			//Funktionen sendOrder()
 			function sendOrder() {
-				alert("Din order är skickad")
+				alert("Din order skickas")
+				showReceipt() //OBS! VG-nivå: Funktion som visar orderöversikt på ny sida
+				emptyCart()
+			}
+
+			//Skapa funktion showReceipt() som visar en översikt av beställningen (med alla detaljer)
+			function showReceipt() {
+				$("#orderedProducts").html("TEST")
 			}
 		}
 
