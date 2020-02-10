@@ -93,7 +93,7 @@ $(document).ready(function() {
 			})
 			$cartItems += "</table>"
 			$cartItems +=
-				"<button type='button' class='sendOrderBtn'><i class='fa fa-arrow-right'></i><a href='receipt.html'> Skicka beställning </a></button>"
+				"<button type='button' class='sendOrderBtn'><i class='fa fa-arrow-right'></i> Skicka beställning </button>"
 			$cartItems +=
 				"<button type='button' class='emptyCartBtn' ><i class='fa fa-trash'></i> Töm varukorgen</button></br></br>"
 			//	cartArray = []
@@ -120,7 +120,7 @@ $(document).ready(function() {
 			$deleteButtons.each(function() {
 				$(this).on("click", function() {
 					console.log(this)
-					removeFromCart(this)
+					removeFromCart(this.id)
 				})
 			})
 
@@ -132,7 +132,7 @@ $(document).ready(function() {
 			//Cacha "Skicka beställning"-knappen och lägg på lyssnare som anropar sendOrder() vid klick
 			$sendOrderBtn = $(".sendOrderBtn")
 			$sendOrderBtn.on("click", function() {
-				sendOrder() //alert eller för VG skapa i nytt fönster
+				sendOrder() //alert eller för VG visa kvitto med detaljer i nytt fönster
 			})
 		}
 		//Slut på drawCart()
@@ -148,7 +148,7 @@ $(document).ready(function() {
 			}
 		}
 
-		//3.2 Lägg till objekt i varukorgen samt spara det i localstorage
+		//3.2 Lägg till objekt i varukorgen
 		function addToCart(buttonId) {
 			//Kvar att fixa: Villkor för att undvika dubletter
 			//if produkt(id?) redan ligger i varukorgen(array.includes?), alert "Produkten ligger redan i varukorgen")
@@ -157,22 +157,24 @@ $(document).ready(function() {
 			for (let i = 0; i < products.length; i++) {
 				if (buttonId == products[i].id) {
 					$cartArray.push(products[i])
-					//console.log(products[i]);
-					console.log($cartArray)
-					//Spara arrayen i localStorage (använd JSON.stringify för att få med hakparenteserna)
 
-					updateLocalStorage()
+					updateLocalStorage() //Uppdaterar arrayen i localStorage
 					drawCart()
-
 					$itemQuantityFields[i].value = null //tömmer objektets qty-fält
 				}
-				//Lägg till objektet i local storage
 			}
 		}
 
 		//3.3 Ta bort objekt från varukorgen (samt local storage?)
 		function removeFromCart(buttonId) {
-			//kod
+			for (let i = 0; i < products.length; i++) {
+				if (buttonId == products[i].id) {
+					$cartArray.splice([i], 1) //Funkar inte som den ska för alla produkter
+
+					updateLocalStorage() //Uppdaterar arrayen i localStorage
+					drawCart()
+				}
+			}
 		}
 
 		//3.4 Ändra antal på befintlig produkt i varukorgen
@@ -196,39 +198,40 @@ $(document).ready(function() {
 					}
 				}
 			}
+			updateLocalStorage() //Uppdaterar arrayen i localStorage
 			drawCart()
 		}
 		//3.5 Tömma varukorgen
 		function emptyCart() {
 			$cartArray = []
+			localStorage.clear() //Tömmer localStorages
 			drawCart()
 		}
 
-		//3.6 Skicka beställning
+		//3.6 Skicka beställning och visa bekräftelse/kvitto i nytt fönster
 		function sendOrder() {
 			alert("Din order skickas")
-			showReceipt() //OBS! VG-nivå: Funktion som visar orderöversikt på ny sida
+			window.open("receipt.html")
+			$("#orderedProducts").html("Test")
 			emptyCart()
+			//OBS! VG-nivå: Funktion som visar orderöversikt på ny sida
 		}
 
-		//Skapa funktion showReceipt() som visar en översikt av beställningen (med alla detaljer)
-		function showReceipt() {
-			$("#orderedProducts").html("TEST")
-			getProductsFromLocalStorage()
-		}
+		//3.7 Visa översikt av beställningen, med alla produktdetaljer och totalpris
+		function showReceipt() {}
 
-		//OKLART! Men verkar fungera. Sparas i localStorage, och uppdateras när man lägger till något.
+		//3.8 Uppdatera localStorage
 		function updateLocalStorage() {
-			//Rensa localStorage
-			localStorage.clear()
-			//Spara arrayen i localStorage
-			localStorage.setItem("cartItems", JSON.stringify($cartArray))
-			let storedArray = JSON.parse(localStorage.getItem("cartItems"))
-			console.log(storedArray)
+			localStorage.clear() //Rensa localStorage
+			localStorage.setItem("storedItems", JSON.stringify($cartArray)) //Spara arrayen i localStorage
+
+			//Eventuellt överflödigt att hämta arrayen från localstorage? Ta i sådana fall bort koden nedan
+			let $storedArray = JSON.parse(localStorage.getItem("storedItems"))
+			console.log($storedArray)
 		}
 
 		//OKLART! Hur skriva ut alla köpta produkter i en tabell, på samma sätt som på startsidan?
-		function getProductsFromLocalStorage() {
+		/*function getProductsFromLocalStorage() {
 			storedArray = JSON.parse(localStorage.getItem("cartItems"))
 			console.log(storedArray)
 
@@ -252,8 +255,9 @@ $(document).ready(function() {
 			output += "</table>"
 			document.getElementById("test").innerHTML = output
 		}
+		*/
 
-		//Funktion för att visa felmeddelande om JSON-filen inte går att läsa.
+		//3.9 Funktion för att visa felmeddelande om JSON-filen inte går att läsa.
 	}).fail(function() {
 		console.error("Fel vid läsning av JSON!")
 	})
