@@ -3,11 +3,13 @@ $(document).ready(function() {
 	//let allProducts = ""; //Produkttabellen inkl html-taggar
 	//let products = []; JSON-arrayen m objekt
 
+	let $storedArray = []
 	const $cart = $("#cartItems") //div-elementet som innehåller varukorgen
 	let $cartItems = "" //Varukorgstabellen med valda produkter inkl html-taggar
 	let $cartArray = [] //Array m varukorgens innehåll (produkter) i form av objekt
 	let $updateButtons = [] //Plus- och minusknappar i varukorgen, för att ändra antal (1 per produktrad)
 	let $deleteButtons = [] //Ta bort-knappar i varukorgen (1 per produktrad)
+	let $totalPrice = 0
 
 	$.getJSON("products.json", function(products) {
 		//DEL 1: STORE
@@ -34,16 +36,16 @@ $(document).ready(function() {
                           <td>${product.origin}</td>
                           <td>${product.price} SEK</td>
                           <td><input type="number" min=0 id="${product.id}" class="quantity"></input></td>
-                          <td><button type="button" id="${product.id}" class="addProductBtn">Lägg i varukorg</button></td>
+                          <td><button type="button" id="${product.id}" class="addProductBtn"><i class="fa fa-cart-plus" aria-hidden="true"></i> Lägg i varukorg</button></td>
                       </tr>`
 		})
 
 		allProducts += `</table>`
 		$("#products").html(allProducts) //Ersätter innehållet i den tomma div-taggen med id="products"
 
-		//1.2. Sätt lyssnare på lägg till-knappar och input-fält för antal
+		//1.2. Sätt lyssnare på statiska element i produktlistan (lägg till-knappar och input-fält för antal)
 
-		//Hitta alla lägg till-knappar, lyssna efter klick och anropa funktionen addToCart
+		//Cacha alla lägg till-knappar, lyssna efter klick och anropa funktionen addToCart
 		const $addProductButtons = $(".addProductBtn")
 		$addProductButtons.each(function() {
 			$(this).on("click", function() {
@@ -51,7 +53,7 @@ $(document).ready(function() {
 			})
 		})
 
-		//Hitta alla antal-inputfält, lyssnar efter ändring och anropar funktionen addQty som lägger till värdet i objektet
+		//Cacha alla antal-inputfält, lyssnar efter ändring och anropar funktionen addQty som lägger till värdet i objektet
 		const $itemQuantityFields = $(".quantity")
 		$itemQuantityFields.each(function() {
 			$(this).on("change", function() {
@@ -73,7 +75,7 @@ $(document).ready(function() {
 			$cartItems = ""
 			$cartItems = `<h3>Din varukorg</h3><table class="table table-striped table-hover"><thead class="thead-light">
 											<tr>
-												<th>Namn</th>
+												<th>Produkt</th>
 												<th>Antal</th>
 												<th>Pris/st</th>
 												<th></th>
@@ -83,15 +85,16 @@ $(document).ready(function() {
 			$cartArray.forEach(product => {
 				$cartItems += `<tr>						
 													<td>${product.name}</td>
-													<td><button type="button" id="${product.id}" class="minusOne changeQty">➖</button>  
-													${product.qty}  
-													<button type="button" id="${product.id}" class="plusOne changeQty">➕</button></td>
+													<td><button type="button" id="${product.id}" class="minusOne changeQty"><i class="fa fa-minus" aria-hidden="true"></i></button>  
+													 ${product.qty}
+													<button type="button" id="${product.id}" class="plusOne changeQty"><i class="fa fa-plus" aria-hidden="true"></i></button></td>
 													<td>${product.price} SEK</td>
-													<td><button type="button" id="${product.id}" class="removeProductBtn">Ta bort</button></td>
+													<td><button type="button" id="${product.id}" class="removeProductBtn"><i class="fa fa-trash-o" aria-hidden="true"></i> Ta bort</button></td>
 												</tr>
 							`
 			})
 			$cartItems += "</table>"
+			$cartItems += `<h4>Totalsumma: ${totalPrice($cartArray)} kr </h4>`
 			$cartItems +=
 				"<button type='button' class='sendOrderBtn'><i class='fa fa-arrow-right'></i> Skicka beställning </button>"
 			$cartItems +=
@@ -110,7 +113,6 @@ $(document).ready(function() {
 			$updateButtons = $(".changeQty")
 			$updateButtons.each(function() {
 				$(this).on("click", function() {
-					console.log(this)
 					changeQty(this)
 				})
 			})
@@ -119,7 +121,6 @@ $(document).ready(function() {
 			$deleteButtons = $(".removeProductBtn")
 			$deleteButtons.each(function() {
 				$(this).on("click", function() {
-					console.log(this)
 					removeFromCart(this.id)
 				})
 			})
@@ -146,6 +147,22 @@ $(document).ready(function() {
 					products[i].qty = qty
 				}
 			}
+		}
+
+		//Beräkna totalsumman i varukorgen
+		function totalPrice(arr) {
+			let outputPrice = 0
+			console.log(arr)
+
+			for (let i = 0; i < arr.length; i++) {
+				const qty = parseInt(arr[i].qty)
+				const price = parseInt(arr[i].price)
+				outputPrice += qty * price
+			}
+
+			console.log(outputPrice)
+
+			return outputPrice
 		}
 
 		//3.2 Lägg till objekt i varukorgen
@@ -204,7 +221,7 @@ $(document).ready(function() {
 		//3.5 Tömma varukorgen
 		function emptyCart() {
 			$cartArray = []
-			localStorage.clear() //Tömmer localStorages
+			//localStorage.clear() //Tömmer localStorages
 			drawCart()
 		}
 
@@ -218,44 +235,17 @@ $(document).ready(function() {
 		}
 
 		//3.7 Visa översikt av beställningen, med alla produktdetaljer och totalpris
-		function showReceipt() {}
+		function showReceipt() {} //TA BORT? Lägg in all kod direkt i funktionen sendOrder() ovan?
 
 		//3.8 Uppdatera localStorage
 		function updateLocalStorage() {
-			localStorage.clear() //Rensa localStorage
+			//localStorage.clear() //Rensa localStorage
 			localStorage.setItem("storedItems", JSON.stringify($cartArray)) //Spara arrayen i localStorage
 
 			//Eventuellt överflödigt att hämta arrayen från localstorage? Ta i sådana fall bort koden nedan
 			let $storedArray = JSON.parse(localStorage.getItem("storedItems"))
 			console.log($storedArray)
 		}
-
-		//OKLART! Hur skriva ut alla köpta produkter i en tabell, på samma sätt som på startsidan?
-		/*function getProductsFromLocalStorage() {
-			storedArray = JSON.parse(localStorage.getItem("cartItems"))
-			console.log(storedArray)
-
-			let output = `<table class="table table-striped table-hover">
-								<thead class="thead-light">
-								<tr>
-								<th></th>
-								<th>Namn</th>
-								<th>Ursprungsland</th>
-								<th>Pris</th>
-								<th>Antal</th>
-								<th></th>
-								</tr>
-								</thead>`
-
-			for (let i = 0; i < localStorage.length; i++) {
-				console.log(localStorage.getItem(localStorage.key(i))) //Med getItem hämtar vi själva värdet
-
-				output += "<tr>" + localStorage.getItem(localStorage.key(i)) + "<tr/>"
-			}
-			output += "</table>"
-			document.getElementById("test").innerHTML = output
-		}
-		*/
 
 		//3.9 Funktion för att visa felmeddelande om JSON-filen inte går att läsa.
 	}).fail(function() {
