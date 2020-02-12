@@ -1,14 +1,11 @@
 $(document).ready(function() {
-	//let allProducts = ""; //Produkttabellen inkl html-taggar
-	//let products = []; JSON-arrayen m objekt
-
+	let allProducts = "" //Produkttabellen inkl html-taggar
 	let $storedArray = [] //array med valda produkter som sparas i localStorage
 	const $cart = $("#cartItems") //div-elementet som visar varukorgen på sidan
 	let $cartItems = "" //Varukorgstabellen med valda produkter inkl html-taggar
 	let $cartArray = [] //Array m varukorgens innehåll (produkter) i form av objekt
 	let $updateButtons = [] //Plus- och minusknappar i varukorgen, för att ändra antal (1 per produktrad)
 	let $deleteButtons = [] //Ta bort-knappar i varukorgen (1 per produktrad)
-	let $receiptWindow //referens till receipt-fönstret som öppnas vid beställning
 
 	$.getJSON("products.json", function(products) {
 		//DEL 1: STORE
@@ -60,7 +57,7 @@ $(document).ready(function() {
 			})
 		})
 
-		//1.3. Skapa lyssnare för knappen visa/dölja varukorg
+		//1.3. casha knappen visa/dölja varukorg och sätt lyssnare som togglar mellan visa/dölj
 		const $showCartBtn = $("#showCartBtn")
 		$showCartBtn.click(function() {
 			$cart.toggle()
@@ -108,8 +105,8 @@ $(document).ready(function() {
 			//2.2 Sätt lyssnare på knappar i varukorgen
 
 			//Cacha plus- och minusknappar och lägg på lyssnare som anropar changeQty() vid klick
-			$updateButtons = $(".changeQty")
-			$updateButtons.each(function() {
+			$changeQtyButtons = $(".changeQty")
+			$changeQtyButtons.each(function() {
 				$(this).on("click", function() {
 					changeQty(this)
 				})
@@ -154,7 +151,9 @@ $(document).ready(function() {
 
 			//Kollar om produkten redan finns i varukorgen, för att undvika dubletter
 			if ($cartArray.includes(newProduct)) {
-				alert("Produkten är redan tillagd, vänligen ändra antal i varukorgen.")
+				alert(
+					"Produkten är redan tillagd, vänligen ändra antal i varukorgen i stället."
+				)
 				$itemQuantityFields[index].value = null //tömmer produktradens antal-fält
 			} else {
 				for (let i = 0; i < products.length; i++) {
@@ -172,7 +171,6 @@ $(document).ready(function() {
 		function removeFromCart(buttonId) {
 			const removedProductId = parseInt(buttonId)
 			const updatedCart = $cartArray.filter(function(item) {
-				//const itemID = item.id
 				return item.id !== removedProductId
 			})
 			$cartArray = updatedCart
@@ -224,13 +222,13 @@ $(document).ready(function() {
 		//3.7 Skicka beställning och visa bekräftelse/kvitto i nytt fönster
 		function sendOrder() {
 			alert("Din order skickas")
-			openWindow()
+			openReceiptWindow()
 			emptyCart()
 		}
 
-		//3.8 Öppna orderbekräftelse i nytt fönster
-		function openWindow() {
-			$receiptWindow = window.open(
+		//3.8 Öppna orderbekräftelse (kvitto) i nytt fönster
+		function openReceiptWindow() {
+			window.open(
 				"receipt.html",
 				"_blank",
 				"toolbar=yes,scrollbars=yes,resizable=yes,top=100,left=100,width=700,height=400"
