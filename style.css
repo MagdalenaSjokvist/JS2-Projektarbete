@@ -8,8 +8,14 @@
 
 body {
 	font-family: "montserrat", sans-serif;
+	margin-left: 20px;
+	margin-right: 20px;
 }
 
+a {
+	text-decoration: none;
+	color: black;
+}
 h1 {
 	margin-top: 30px;
 }
@@ -18,7 +24,7 @@ th {
 	font-weight: bolde;
 }
 td {
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: 800;
 }
 
