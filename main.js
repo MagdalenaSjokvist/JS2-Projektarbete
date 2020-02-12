@@ -3,8 +3,8 @@ $(document).ready(function() {
 	let $storedArray = [] //array med valda produkter som sparas i localStorage
 	const $cart = $("#cartItems") //div-elementet som visar varukorgen på sidan
 	let $cartItems = "" //Varukorgstabellen med valda produkter inkl html-taggar
-	let $cartArray = [] //Array m varukorgens innehåll (produkter) i form av objekt
-	let $updateButtons = [] //Plus- och minusknappar i varukorgen, för att ändra antal (1 per produktrad)
+	let $cartArray = [] //Array med varukorgens innehåll (produkter) i form av objekt
+	let $changeQtyButtons = [] //Plus- och minusknappar i varukorgen, för att ändra antal (1 per produktrad)
 	let $deleteButtons = [] //Ta bort-knappar i varukorgen (1 per produktrad)
 
 	$.getJSON("products.json", function(products) {
